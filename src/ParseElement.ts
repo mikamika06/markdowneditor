@@ -1,0 +1,3 @@
+class ParseEleement{
+    CurrentLine: string = "";
+}
