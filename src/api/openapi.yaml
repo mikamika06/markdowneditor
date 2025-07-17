@@ -1,0 +1,174 @@
+openapi: 3.0.3
+info:
+  title: Notes Service API
+  version: 1.0.0
+  description: API для створення, зберігання, редагування та конвертації нотаток у форматі Markdown.
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Note:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+          description: Markdown content
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, userId, title, content, createdAt, updatedAt]
+    NoteInput:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+          description: Markdown content
+      required: [title, content]
+
+security:
+  - BearerAuth: []
+
+paths:
+  /notes:
+    post:
+      summary: Створити нотатку
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '201':
+          description: Нотатку створено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '401':
+          description: Неавторизовано
+    get:
+      summary: Отримати список нотаток користувача
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список нотаток
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+        '401':
+          description: Неавторизовано
+
+  /notes/{id}:
+    get:
+      summary: Отримати нотатку за ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Нотатка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Нотатку не знайдено
+        '401':
+          description: Неавторизовано
+    put:
+      summary: Оновити нотатку
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '200':
+          description: Оновлена нотатка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Нотатку не знайдено
+        '401':
+          description: Неавторизовано
+    delete:
+      summary: Видалити нотатку
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Нотатку видалено
+        '404':
+          description: Нотатку не знайдено
+        '401':
+          description: Неавторизовано
+
+  /notes/{id}/html:
+    get:
+      summary: Отримати нотатку у вигляді HTML
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: HTML-версія нотатки
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Нотатку не знайдено
+        '401':
+          description: Неавторизовано
