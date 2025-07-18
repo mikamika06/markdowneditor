@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
-import jwt from 'jsonwebtoken';
 
 export class AuthController {
     constructor(private authService: AuthService) { }
@@ -29,13 +28,9 @@ export class AuthController {
                 return res.status(401).json({ message: 'Invalid email or password' });
             }
 
-            const token = jwt.sign(
-                { userId: user.id },
-                process.env.JWT_SECRET!,
-                { expiresIn: '1h' }
-            );
+            
 
-            return res.json({ user, token });
+            return res.json(user);
         } catch (error) {
             throw error;
         }

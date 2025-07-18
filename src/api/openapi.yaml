@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Notes Service API
   version: 1.0.0
-  description: API для створення, зберігання, редагування та конвертації нотаток у форматі Markdown.
+  description: API for creating, storing, editing, and converting notes in Markdown format.
 servers:
   - url: http://localhost:3000
     description: Local server
@@ -42,14 +42,116 @@ components:
           type: string
           description: Markdown content
       required: [title, content]
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+      required: [id, email]
+    UserRegisterInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required: [email, password]
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
 
 security:
   - BearerAuth: []
 
 paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegisterInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+                
+  /auth/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegisterInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /notes:
     post:
-      summary: Створити нотатку
+      summary: Create a note
       security:
         - BearerAuth: []
       requestBody:
@@ -60,20 +162,30 @@ paths:
               $ref: "#/components/schemas/NoteInput"
       responses:
         "201":
-          description: Нотатку створено
+          description: Note created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Note"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     get:
-      summary: Отримати список нотаток користувача
+      summary: Get user's notes list
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: Список нотаток
+          description: List of notes
           content:
             application/json:
               schema:
@@ -81,11 +193,21 @@ paths:
                 items:
                   $ref: "#/components/schemas/Note"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /notes/{id}:
     get:
-      summary: Отримати нотатку за ID
+      summary: Get note by ID
       security:
         - BearerAuth: []
       parameters:
@@ -96,17 +218,37 @@ paths:
             type: string
       responses:
         "200":
-          description: Нотатка
+          description: Note
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Note"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "404":
-          description: Нотатку не знайдено
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
-      summary: Оновити нотатку
+      summary: Update a note
       security:
         - BearerAuth: []
       parameters:
@@ -123,17 +265,37 @@ paths:
               $ref: "#/components/schemas/NoteInput"
       responses:
         "200":
-          description: Оновлена нотатка
+          description: Updated note
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Note"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "404":
-          description: Нотатку не знайдено
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
-      summary: Видалити нотатку
+      summary: Delete a note
       security:
         - BearerAuth: []
       parameters:
@@ -144,15 +306,35 @@ paths:
             type: string
       responses:
         "204":
-          description: Нотатку видалено
+          description: Note deleted
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "404":
-          description: Нотатку не знайдено
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /notes/{id}/html:
     get:
-      summary: Отримати нотатку у вигляді HTML
+      summary: Get note as HTML
       security:
         - BearerAuth: []
       parameters:
@@ -163,12 +345,32 @@ paths:
             type: string
       responses:
         "200":
-          description: HTML-версія нотатки
+          description: HTML version of note
           content:
             text/html:
               schema:
                 type: string
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "404":
-          description: Нотатку не знайдено
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "401":
-          description: Неавторизовано
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"

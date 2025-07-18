@@ -1,6 +1,6 @@
 import { User } from "../models/user.model";
 import bcrypt from 'bcrypt';
-
+import jwt from 'jsonwebtoken';
 
 
 const users: User[] = [];
@@ -22,12 +22,17 @@ export class AuthService {
         const { passwordHash: _, ...userWithoutPassword } = newUser;
         return userWithoutPassword;
     }
-    async login(email: string, password: string): Promise<Omit<User, 'passwordHash'> | null> {
+    async login(email: string, password: string): Promise<{ user:Omit<User, 'passwordHash'>; token:string} | null> {
         const user = users.find(u => u.email == email);
         if (!user) return null;
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
         if (!isPasswordValid) return null;
         const { passwordHash: _, ...userWithoutPassword } = user;
-        return userWithoutPassword;
+        const token = jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET!,
+            { expiresIn: '1h' }
+        );
+        return { user: userWithoutPassword, token };
     }
 }
