@@ -8,69 +8,85 @@ export class NotesController {
 
     createNote = (req: Request, res: Response) => {
         try {
-            if (!req.user) {
-                return res.status(401).json({ message: 'Unauthorized' });
-            }
-            const userId = req.user.id; 
+            const userId = req.user!.id; 
             const { title, content } = req.body;
             const note = this.notesService.createNote({ userId, title, content });
             return res.status(201).json(note);
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 
     getNote = (req: Request, res: Response) => {
         try {
             const note = this.notesService.getNote(req.params.id);
-            if (!note) return res.status(404).json({ message: 'Note not found' });
+            if (!note) {
+                return res.status(404).json({ message: 'Note not found' });
+            }
+            if (note.userId !== req.user!.id) {
+                return res.status(403).json({ message: 'Forbidden: You do not have access to this note' });
+            }
             return res.json(note);
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 
     updateNote = (req: Request, res: Response) => {
         try {
-            const note = this.notesService.updateNote(req.params.id, req.body);
-            if (!note) return res.status(404).json({ message: 'Note not found' });
-            return res.json(note);
+            const note = this.notesService.getNote(req.params.id);
+            if (!note) {
+                return res.status(404).json({ message: 'Note not found' });
+            }
+            if (note.userId !== req.user!.id) {
+                return res.status(403).json({ message: 'Forbidden: You do not have access to this note' });
+            }
+            const updatedNote = this.notesService.updateNote(req.params.id, req.body);
+            return res.json(updatedNote);
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 
     deleteNote = (req: Request, res: Response) => {
         try {
-            const success = this.notesService.deleteNote(req.params.id);
-            if (!success) return res.status(404).json({ message: 'Note not found' });
+            const note = this.notesService.getNote(req.params.id);
+            if (!note) {
+                return res.status(404).json({ message: 'Note not found' });
+            }
+            if (note.userId !== req.user!.id) {
+                return res.status(403).json({ message: 'Forbidden: You do not have access to this note' });
+            }
+            this.notesService.deleteNote(req.params.id);
             return res.status(204).send();
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 
     listNotes = (req: Request, res: Response) => {
         try {
-            if (!req.user) {
-                return res.status(401).json({ message: 'Unauthorized' });
-            }
-            const userId = req.user.id;
+            const userId = req.user!.id;
             const notes = this.notesService.listNotes(userId);
             return res.json(notes);
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 
     getNoteHtml = (req: Request, res: Response) => {
         try {
             const note = this.notesService.getNote(req.params.id);
-            if (!note) return res.status(404).json({ message: 'Note not found' });
+            if (!note) {
+                return res.status(404).json({ message: 'Note not found' });
+            }
+            if (note.userId !== req.user!.id) {
+                return res.status(403).json({ message: 'Forbidden: You do not have access to this note' });
+            }
             const html = markdownToHtml(note.content);
             return res.type('html').send(html);
         } catch (error) {
-            return res.status(500).json({ message: 'Internal server error' });
+            throw error;
         }
     };
 }
