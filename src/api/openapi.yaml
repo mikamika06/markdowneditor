@@ -57,30 +57,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteInput'
+              $ref: "#/components/schemas/NoteInput"
       responses:
-        '201':
+        "201":
           description: Нотатку створено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
-        '401':
+                $ref: "#/components/schemas/Note"
+        "401":
           description: Неавторизовано
     get:
       summary: Отримати список нотаток користувача
       security:
         - BearerAuth: []
       responses:
-        '200':
+        "200":
           description: Список нотаток
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Note'
-        '401':
+                  $ref: "#/components/schemas/Note"
+        "401":
           description: Неавторизовано
 
   /notes/{id}:
@@ -95,15 +95,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Нотатка
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
-        '404':
+                $ref: "#/components/schemas/Note"
+        "404":
           description: Нотатку не знайдено
-        '401':
+        "401":
           description: Неавторизовано
     put:
       summary: Оновити нотатку
@@ -120,17 +120,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteInput'
+              $ref: "#/components/schemas/NoteInput"
       responses:
-        '200':
+        "200":
           description: Оновлена нотатка
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Note'
-        '404':
+                $ref: "#/components/schemas/Note"
+        "404":
           description: Нотатку не знайдено
-        '401':
+        "401":
           description: Неавторизовано
     delete:
       summary: Видалити нотатку
@@ -143,11 +143,11 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Нотатку видалено
-        '404':
+        "404":
           description: Нотатку не знайдено
-        '401':
+        "401":
           description: Неавторизовано
 
   /notes/{id}/html:
@@ -162,13 +162,13 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: HTML-версія нотатки
           content:
             text/html:
               schema:
                 type: string
-        '404':
+        "404":
           description: Нотатку не знайдено
-        '401':
+        "401":
           description: Неавторизовано

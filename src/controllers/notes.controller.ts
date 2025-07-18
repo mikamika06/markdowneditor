@@ -8,7 +8,7 @@ export class NotesController {
 
     createNote = (req: Request, res: Response) => {
         try {
-            const userId = req.user!.id; 
+            const userId = req.user!.id;
             const { title, content } = req.body;
             const note = this.notesService.createNote({ userId, title, content });
             return res.status(201).json(note);

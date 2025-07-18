@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import jwt from 'jsonwebtoken';
 
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) { }
 
     register = async (req: Request, res: Response) => {
         try {

@@ -27,13 +27,13 @@ export class NotesService {
         return note;
     }
 
-    deleteNote(id : string) : boolean {
-        const index = this.notes.findIndex(note => note.id === id );
-        if(index === -1) return false;
-        this.notes.splice(index,1);
+    deleteNote(id: string): boolean {
+        const index = this.notes.findIndex(note => note.id === id);
+        if (index === -1) return false;
+        this.notes.splice(index, 1);
         return true;
     }
-    listNotes (userId: string) : Note[]{
+    listNotes(userId: string): Note[] {
         return this.notes.filter(note => note.userId === userId)
     }
 
