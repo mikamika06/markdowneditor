@@ -13,10 +13,12 @@ jest.mock('jsonwebtoken', () => ({
 
 describe('AuthService', () => {
     let authService: AuthService;
+    const {users} = jest.requireActual('../../src/services/auth.service');
     
     beforeEach(() => {
         jest.clearAllMocks();
         authService = new AuthService();
+        users.length =0;
         
         (bcrypt.hash as jest.Mock).mockResolvedValue('hashed_password');
         (bcrypt.compare as jest.Mock).mockResolvedValue(true);

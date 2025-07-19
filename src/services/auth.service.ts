@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 
-const users: User[] = [];
+export const users: User[] = [];
 
 export class AuthService {
     async register(email: string, password: string): Promise<Omit<User, 'passwordHash'>> {

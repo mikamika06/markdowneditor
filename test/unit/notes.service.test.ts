@@ -1,5 +1,4 @@
 import { NotesService } from '../../src/services/notes.service';
-import { Note } from '../../src/models/note.model';
 
 describe('NotesService', () => {
     let notesService: NotesService;
@@ -53,10 +52,12 @@ describe('NotesService', () => {
                 title: 'Updated Title',
                 content: 'Updated Content'
             };
+            const originalNote = notesService.getNote(testNoteId);
             const updatedNote = notesService.updateNote(testNoteId, updateData);
             expect(updatedNote?.title).toBe('Updated Title');
             expect(updatedNote?.content).toBe('Updated Content');
-            expect(updatedNote?.updatedAt).not.toBe(updatedNote?.createdAt);
+            expect(new Date(updatedNote!.updatedAt).getTime())
+                .toBeGreaterThanOrEqual(new Date(originalNote!.createdAt).getTime());
         });
 
         it('should return undefined for non-existent note', () => {

@@ -84,7 +84,7 @@ export class NotesController {
                 return res.status(403).json({ message: 'Forbidden: You do not have access to this note' });
             }
             const html = markdownToHtml(note.content);
-            return res.type('html').send(html);
+            return res.type('text/html').send(html);
         } catch (error) {
             throw error;
         }

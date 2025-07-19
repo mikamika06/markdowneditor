@@ -1,8 +1,8 @@
+/// <reference path="../../src/models/express.d.ts" />
 import { NotesController } from '../../src/controllers/notes.controller';
 import { NotesService } from '../../src/services/notes.service';
 import { Request, Response } from 'express';
 import { Note } from '../../src/models/note.model';
-import '../../src/models/express';
 
 jest.mock('../../src/services/notes.service');
 jest.mock('../../src/utils/markdown', () => ({
