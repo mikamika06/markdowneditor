@@ -24,12 +24,22 @@
     },
     "homepage": "https://github.com/mikamika06/markdowneditor#readme",
     "dependencies": {
+        "@opentelemetry/api": "^1.9.0",
+        "@opentelemetry/auto-instrumentations-node": "^0.62.0",
+        "@opentelemetry/exporter-jaeger": "^2.0.1",
+        "@opentelemetry/instrumentation-express": "^0.52.0",
+        "@opentelemetry/instrumentation-http": "^0.203.0",
+        "@opentelemetry/sdk-node": "^0.203.0",
         "bcrypt": "^6.0.0",
         "dotenv": "^17.2.0",
         "express": "^5.1.0",
+        "express-winston": "^4.2.0",
         "jsonwebtoken": "^9.0.2",
         "marked": "^16.1.0",
-        "typescript": "^5.8.3"
+        "prom-client": "^15.1.3",
+        "typescript": "^5.8.3",
+        "winston": "^3.17.0",
+        "yaml": "^2.8.0"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
@@ -38,7 +48,10 @@
         "@types/jsonwebtoken": "^9.0.10",
         "@types/marked": "^5.0.2",
         "@types/supertest": "^2.0.16",
+        "ajv": "^8.17.1",
         "jest": "^30.0.4",
+        "jest-openapi": "^0.14.2",
+        "openapi-validator": "^0.14.2",
         "supertest": "^6.3.3",
         "ts-jest": "^29.4.0"
     }
