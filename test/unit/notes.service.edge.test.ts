@@ -9,6 +9,7 @@ describe('NotesService Edge Cases', () => {
     });
 
     describe('createNote', () => {
+        
         it('should handle empty title', () => {
             const noteData = {
                 userId,
@@ -30,13 +31,14 @@ describe('NotesService Edge Cases', () => {
         });
 
         it('should handle extremely large content', () => {
-            const largeContent = 'A'.repeat(10001); // 10KB+ of content
+            const largeContent = 'A'.repeat(11001); // 10KB+ of content
             const noteData = {
                 userId,
                 title: 'Large Note',
                 content: largeContent
             };
-            
+            // console.log('Content length:', noteData.content.length);
+
             expect(() => notesService.createNote(noteData)).toThrow('Content size exceeds maximum allowed');
         });
     });

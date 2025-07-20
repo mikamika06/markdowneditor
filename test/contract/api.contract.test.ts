@@ -17,11 +17,13 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/notes', verifyToken, notesRoutes);
 
-const openApiPath = path.join(__dirname, '../../src/api/openapi.yaml');
+
+
+const openApiPath = path.join(__dirname,'../../src/api/apenapi.yaml');
 const openApiContent = fs.readFileSync(openApiPath, 'utf8');
 const openApiSpec = YAML.parse(openApiContent);
 
-const ajv = new Ajv({ strict: false, allErrors: true });
+const ajv = new Ajv({strict: false, allErrors: true});
 addFormats(ajv);
 
 describe('API Contract Tests', () => {
