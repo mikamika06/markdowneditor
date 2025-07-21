@@ -16,7 +16,7 @@
     "useDefineForClassFields": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "typeRoots": ["src/models", "node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
