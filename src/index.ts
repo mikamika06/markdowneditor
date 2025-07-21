@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('Markdown Editor API is running!');
+});
+
 app.use('/auth', authRoutes);
 
 app.use('/notes', verifyToken, notesRoutes);

@@ -1,11 +1,16 @@
 import { User } from "../models/user.model";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-
-export const users: User[] = [];
+import { IUserRepository } from '../repositories/interfaces/user-repository.interface';
+import { RepositoryFactory } from '../repositories/repository-factory';
 
 export class AuthService {
+    private userRepository: IUserRepository;
+    
+    constructor() {
+        this.userRepository = RepositoryFactory.getUserRepository();
+    }
+    
     async register(email: string, password: string): Promise<Omit<User, 'passwordHash'>> {
         if (!email || !this.isValidEmail(email)) {
             throw new Error('Invalid email format');
@@ -21,21 +26,13 @@ export class AuthService {
             throw new Error('Password must be less than 100 characters');
         }
 
-        const existingUser = users.find(u => u.email === email);
+        const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) {
             throw new Error('User with this email already exists');
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const newUser: User = {
-            id: Math.random().toString(36).slice(2, 9),
-            email,
-            passwordHash,
-        };
-        users.push(newUser);
-
-        const { passwordHash: _, ...userWithoutPassword } = newUser;
-        return userWithoutPassword;
+        return this.userRepository.create(email, passwordHash);
     }
 
     async login(email: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; token: string } | null> {
@@ -43,7 +40,7 @@ export class AuthService {
             throw new Error('Email and password are required');
         }
 
-        const user = users.find(u => u.email == email);
+        const user = await this.userRepository.findByEmail(email);
         if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);

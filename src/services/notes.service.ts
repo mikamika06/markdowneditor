@@ -1,10 +1,16 @@
 import { Note } from '../models/note.model';
+import { INoteRepository } from '../repositories/interfaces/note-repository.interface';
+import { RepositoryFactory } from '../repositories/repository-factory';
 
 export class NotesService {
-    private notes: Note[] = [];
+    private noteRepository: INoteRepository;
     private readonly MAX_CONTENT_SIZE = 10240;
 
-    createNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Note {
+    constructor() {
+        this.noteRepository = RepositoryFactory.getNoteRepository();
+    }
+
+    async createNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> {
         
         if (!note.title || note.title.trim() === '') {
             throw new Error('Title cannot be empty');
@@ -18,23 +24,16 @@ export class NotesService {
             throw new Error('Content size exceeds maximum allowed');
         }
 
-        const newNote: Note = {
-            ...note,
-            id: this.generateId(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
-        this.notes.push(newNote);
-        return newNote;
+        return this.noteRepository.create(note);
     }
 
-    getNote(id: string): Note | undefined {
-        return this.notes.find(note => note.id === id);
+    async getNote(id: string): Promise<Note | null> {
+        return this.noteRepository.findById(id);
     }
 
-    updateNote(id: string, data: Partial<Omit<Note, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>): Note | undefined {
-        const note = this.getNote(id);
-        if (!note) return undefined;
+    async updateNote(id: string, data: Partial<Omit<Note, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>): Promise<Note | null> {
+        const note = await this.getNote(id);
+        if (!note) return null;
 
         if (data.content && data.content.length > this.MAX_CONTENT_SIZE) {
             throw new Error('Content size exceeds maximum allowed');
@@ -48,24 +47,14 @@ export class NotesService {
             throw new Error('Content cannot be empty');
         }
 
-        if (data.title) note.title = data.title;
-        if (data.content) note.content = data.content;
-        note.updatedAt = new Date().toISOString();
-        return note;
+        return this.noteRepository.update(id, data);
     }
 
-    deleteNote(id: string): boolean {
-        const index = this.notes.findIndex(note => note.id === id);
-        if (index === -1) return false;
-        this.notes.splice(index, 1);
-        return true;
+    async deleteNote(id: string): Promise<boolean> {
+        return this.noteRepository.delete(id);
     }
 
-    listNotes(userId: string): Note[] {
-        return this.notes.filter(note => note.userId === userId)
-    }
-
-    private generateId(): string {
-        return Math.random().toString(36).slice(2, 9);
+    async listNotes(userId: string): Promise<Note[]> {
+        return this.noteRepository.findAllByUserId(userId);
     }
 }
