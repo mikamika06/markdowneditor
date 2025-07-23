@@ -28,33 +28,3 @@ coverage/
 
 # Windows system files
 Thumbs.db
-
-# Logs
-logs/
-*.log
-
-# Jest cache
-jest-cache/
-jest-config/
-jest-html-reporters-*
-jest-coverage/
-
-# npm cache
-.npm/
-
-# Optional: local settings
-*.swp
-*.swo
-
-# Docker
-docker-compose.override.yml
-.env.docker
-
-# Heroku
-/dist
-/.cache
-/.heroku
-
-# PostgreSQL
-*.dump
-pg_*
