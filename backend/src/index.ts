@@ -15,9 +15,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.herokuapp.com'] 
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173'],
+  origin: [
+    'https://markdown-editor-app-9d1216444045.herokuapp.com',
+    'http://localhost:5173'
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
