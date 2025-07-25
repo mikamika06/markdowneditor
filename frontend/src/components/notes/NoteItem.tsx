@@ -11,13 +11,17 @@ export function NoteItem({ note, isActive, onClick }: NoteItemProps) {
   
   return (
     <div
-      className={`p-3 cursor-pointer hover:bg-gray-100 ${
-        isActive ? 'bg-blue-50 border-l-4 border-blue-500' : ''
-      }`}
+      className={`p-3 cursor-pointer transition-colors duration-200 ${
+        isActive 
+          ? 'bg-gray-100 border-l-4 border-gray-700 shadow-sm' 
+          : 'hover:bg-gray-50 border-l-4 border-transparent'
+      } pr-8`} 
       onClick={onClick}
     >
       <div className="flex justify-between items-start">
-        <h3 className="font-medium truncate">{note.title}</h3>
+        <h3 className={`font-medium truncate ${isActive ? 'text-gray-800' : 'text-gray-700'}`}>
+          {note.title}
+        </h3>
         <div className="text-xs text-gray-500 whitespace-nowrap ml-2">
           {formattedDate}
         </div>

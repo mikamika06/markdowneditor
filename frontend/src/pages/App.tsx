@@ -28,7 +28,7 @@ function AppContent() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
             </div>
         );
     }
@@ -49,16 +49,16 @@ function AppContent() {
                         <p className="text-gray-600 mb-6">Sign in to start working with your notes</p>
                         <button
                             onClick={() => setShowAuthForm(true)}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
                         >
-                            Sign In or Register
+                            Login or Register
                         </button>
                     </div>
                 </div>
             )}
             
             {showAuthForm && (
-                <AuthForm />
+                <AuthForm onClose={()=> setShowAuthForm(false)}/>
             )}
         </div>
     );

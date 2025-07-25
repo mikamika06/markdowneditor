@@ -43,13 +43,8 @@ export const useAuthStore = create<AuthStore>()(
       register: async (credentials) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authService.register(credentials);
-          localStorage.setItem('token', response.token);
-          set({ 
-            user: response.user, 
-            isAuthenticated: true, 
-            isLoading: false 
-          });
+          await authService.register(credentials);
+          set({ isLoading: false });
         } catch (error) {
           set({ 
             error: error instanceof Error ? error.message : 'Registration failed',

@@ -28,6 +28,13 @@ export const notesService = {
 
   async getNoteAsHtml(id: string): Promise<string> {
     const response = await api.get(`/notes/${id}/html`);
-    return response.data.html;
+    if (typeof response.data === 'string') {
+      return response.data;
+    } else if (response.data.html) {
+      return response.data.html;
+    } else {
+      console.error('Unexpected response format:', response.data);
+      return '<p>Помилка рендерингу HTML</p>';
+    }
   },
 };
