@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(cors({
   origin: [
     'https://markdown-editor-app-9d1216444045.herokuapp.com',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://markdowneditor-gold.vercel.app'
   ],
   credentials: true,
   optionsSuccessStatus: 200,
