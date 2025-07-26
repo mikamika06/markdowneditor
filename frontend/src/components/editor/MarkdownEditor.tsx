@@ -71,7 +71,7 @@ export function MarkdownEditor() {
         return (
             <div className="flex-1 flex items-center justify-center p-4 text-gray-500">
                 <div className="text-center">
-                    <p className="mb-2">Виберіть нотатку зі списку або створіть нову</p>
+                    <p className="mb-2">Select a note from the list or create a new one</p>
                 </div>
             </div>
         );
