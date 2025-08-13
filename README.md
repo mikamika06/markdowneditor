@@ -33,7 +33,7 @@ A fully functional web application for creating, storing, and editing Markdown d
 
 ## 🚀 Quick Start
 
-### Requirements
+### Requirementss
 - Node.js 16+
 - PostgreSQL 14+
 - npm 8+
