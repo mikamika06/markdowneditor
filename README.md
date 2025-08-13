@@ -16,7 +16,7 @@ A fully functional web application for creating, storing, and editing Markdown d
 
 ## 🛠️ Technologies
 
-### Backend
+### Backendd
 - Node.js + TypeScript
 - Express.js
 - PostgreSQL
