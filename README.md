@@ -16,7 +16,7 @@ A fully functional web application for creating, storing, and editing Markdown d
 
 ## 🛠️ Technologies
 
-### Backend
+### Backendd
 - Node.js + TypeScript
 - Express.js
 - PostgreSQL
@@ -33,7 +33,7 @@ A fully functional web application for creating, storing, and editing Markdown d
 
 ## 🚀 Quick Start
 
-### Requirements
+### Requirementss
 - Node.js 16+
 - PostgreSQL 14+
 - npm 8+
@@ -136,7 +136,7 @@ npm run test:coverage
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## 📄 Licensee
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
