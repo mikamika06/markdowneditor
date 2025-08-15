@@ -12,7 +12,7 @@ async def root():
 
 @app.get("/test-ai")
 async def test_ai():
-    prompt = "Say height of barak obama  "
+    prompt = "Say dadadad"
     response = requests.post(OLLAMA_URL, json={
         "model": MODEL_NAME,
         "prompt": prompt,

@@ -108,28 +108,30 @@ export function MarkdownEditor() {
                 )}
             </div>
             
-            <div className="flex-1 flex divide-x">
-                <div className="w-1/2 h-full overflow-auto editor-shadow">
+            <div className="flex-1 flex divide-x overflow-hidden">
+                <div className="w-1/2 flex flex-col">
                     <div className="bg-gray-50 px-3 py-1 text-xs font-medium">Markdown Editor</div>
-                    <CodeMirror
-                        value={content}
-                        onChange={handleChange}
-                        extensions={[markdown()]}
-                        height="100%"
-                        theme="light"
-                        basicSetup={{
-                            lineNumbers: true,
-                            foldGutter: false,
-                        }}
-                    />
+                    <div className="flex-1 overflow-auto">
+                        <CodeMirror
+                            value={content}
+                            onChange={handleChange}
+                            extensions={[markdown()]}
+                            height="100%"
+                            theme="light"
+                            basicSetup={{
+                                lineNumbers: true,
+                                foldGutter: false,
+                            }}
+                        />
+                    </div>
                 </div>
                 
-                <div className="w-1/2 h-full overflow-auto editor-shadow">
+                <div className="w-1/2 flex flex-col">
                     <div className="bg-gray-50 px-3 py-1 text-xs font-medium flex justify-between items-center">
                         <span>HTML Preview</span>
                         {isLoadingHtml && <span className="text-xs text-gray-600">Loading...</span>}
                     </div>
-                    <div className="p-4 prose prose-slate prose-headings:font-bold prose-h1:text-xl prose-h2:text-lg prose-a:text-gray-700 max-w-none">
+                    <div className="flex-1 overflow-auto p-4 prose prose-slate prose-headings:font-bold prose-h1:text-xl prose-h2:text-lg prose-a:text-gray-700 max-w-none">
                         {isLoadingHtml ? (
                             <div className="flex justify-center py-4">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
