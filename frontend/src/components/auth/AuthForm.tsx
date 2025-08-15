@@ -27,23 +27,29 @@ export function AuthForm({ onClose }: AuthFormProps) {
     resolver: zodResolver(authSchema),
   });
 
-  const onSubmit = async (data: AuthFormData) => {
+  const onSubmit = async (data: AuthFormData, event?: React.BaseSyntheticEvent) => {
+    event?.preventDefault(); // Запобігаємо стандартній поведінці форми
     clearError();
+    console.log('Form submitted with data:', data); // Додаємо лог для діагностики
+    
     try {
       if (isLogin) {
+        console.log('Attempting login...');
         await login(data);
+        console.log('Login successful');
         onClose(); 
       } else {
+        console.log('Attempting registration...');
         await registerUser(data);
+        console.log('Registration successful');
         
         reset();
-        
         setRegistrationSuccess(true);
-        
         setIsLogin(true);
       }
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error('Authentication error occurred:', error);
+      // Помилка вже обробляється в store, тому не треба додаткових дій
     }
   };
 
@@ -52,8 +58,9 @@ export function AuthForm({ onClose }: AuthFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+    <div className="modal-overlay fixed inset-0 z-50 overflow-y-auto bg-gray-800 bg-opacity-75 flex min-h-full items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="modal-content relative bg-white rounded-lg shadow-xl w-full max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="p-6 sm:p-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">
             {isLogin ? 'Login' : 'Sign up'}
@@ -81,6 +88,13 @@ export function AuthForm({ onClose }: AuthFormProps) {
             <ul className="list-disc pl-5 mt-1">
               <li>At least 8 characters</li>
               <li>Less than 100 characters</li>
+            </ul>
+            <p className="mt-2">Additional information:</p>
+            <ul className="list-disc pl-5 mt-1">
+              <li>Use a strong password with numbers and symbols</li>
+              <li>Don't use common passwords</li>
+              <li>Your password will be securely encrypted</li>
+              <li>You can change your password later in settings</li>
             </ul>
           </div>
         )}
@@ -161,6 +175,7 @@ export function AuthForm({ onClose }: AuthFormProps) {
           >
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
           </button>
+        </div>
         </div>
       </div>
     </div>
