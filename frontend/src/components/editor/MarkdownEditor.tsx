@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
 import { markdown } from '@codemirror/lang-markdown';
-import { useUpdateNoteMutation } from '../../hooks/useNotesQuery';
-import { useNotesStore } from '../../stores/notesStore';
+import CodeMirror from '@uiw/react-codemirror';
+import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from '../../hooks/useDebouncedCallback';
+import { useUpdateNoteMutation } from '../../hooks/useNotesQuery';
+import { api } from '../../services/api';
 import { notesService } from '../../services/notesService';
-import {api} from '../../services/api';
+import { useNotesStore } from '../../stores/notesStore';
 export function MarkdownEditor() {
     const { currentNote } = useNotesStore();
     const [content, setContent] = useState('');
@@ -23,16 +23,16 @@ export function MarkdownEditor() {
         }
     }, [currentNote]);
 
-    const fetchHtmlContent = async (noteId: string) => {
+    const fetchHtmlContent = async (noteId: number) => {
         setIsLoadingHtml(true);
         try {
             console.log('Fetching HTML for note:', noteId);
             const response = await api.get(`/notes/${noteId}/html`);
             console.log('Raw server response:', response);
-            
-            const html = await notesService.getNoteAsHtml(noteId);
+
+            const html = await notesService.getNoteAsHtml(noteId.toString());
             console.log('Processed HTML content:', html.substring(0, 100) + '...'); // показуємо перші 100 символів
-            
+
             setHtmlContent(html);
         } catch (error) {
             console.error('Error fetching HTML content:', error);
@@ -45,7 +45,7 @@ export function MarkdownEditor() {
     const debouncedSaveContent = useDebouncedCallback((value: string) => {
         if (currentNote && value !== currentNote.content) {
             updateNoteMutation.mutate({
-                id: currentNote.id,
+                id: currentNote.id.toString(),
                 data: { content: value }
             });
             fetchHtmlContent(currentNote.id);
@@ -60,7 +60,7 @@ export function MarkdownEditor() {
     const handleSaveTitle = () => {
         if (currentNote && title !== currentNote.title) {
             updateNoteMutation.mutate({
-                id: currentNote.id,
+                id: currentNote.id.toString(),
                 data: { title }
             });
         }
@@ -91,7 +91,7 @@ export function MarkdownEditor() {
                             onBlur={handleSaveTitle}
                             onKeyDown={(e) => e.key === 'Enter' && handleSaveTitle()}
                         />
-                        <button 
+                        <button
                             onClick={handleSaveTitle}
                             className="text-xs bg-gray-700 text-white px-2 py-1 rounded"
                         >
@@ -107,10 +107,10 @@ export function MarkdownEditor() {
                     <span className="text-xs text-gray-600">Saving...</span>
                 )}
             </div>
-            
-            <div className="flex-1 flex divide-x overflow-hidden">
-                <div className="w-1/2 flex flex-col">
-                    <div className="bg-gray-50 px-3 py-1 text-xs font-medium">Markdown Editor</div>
+
+            <div className="flex-1 flex flex-col lg:flex-row" style={{ height: 'calc(100vh - 100px)' }}>
+                <div className="w-full lg:w-1/2 flex flex-col border-r">
+                    <div className="bg-gray-50 px-3 py-1 text-xs font-medium border-b">Markdown Editor</div>
                     <div className="flex-1 overflow-auto">
                         <CodeMirror
                             value={content}
@@ -125,19 +125,19 @@ export function MarkdownEditor() {
                         />
                     </div>
                 </div>
-                
-                <div className="w-1/2 flex flex-col">
-                    <div className="bg-gray-50 px-3 py-1 text-xs font-medium flex justify-between items-center">
+
+                <div className="w-full lg:w-1/2 flex flex-col">
+                    <div className="bg-gray-50 px-3 py-1 text-xs font-medium border-b flex justify-between items-center">
                         <span>HTML Preview</span>
                         {isLoadingHtml && <span className="text-xs text-gray-600">Loading...</span>}
                     </div>
-                    <div className="flex-1 overflow-auto p-4 prose prose-slate prose-headings:font-bold prose-h1:text-xl prose-h2:text-lg prose-a:text-gray-700 max-w-none">
+                    <div className="flex-1 p-4 overflow-auto">
                         {isLoadingHtml ? (
                             <div className="flex justify-center py-4">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-700"></div>
                             </div>
                         ) : (
-                            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                            <div className="markdown-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
                         )}
                     </div>
                 </div>

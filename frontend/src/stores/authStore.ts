@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { AuthState, LoginRequest, RegisterRequest } from '../types/auth.types';
+import type { AuthState, LoginRequest, RegisterRequest, User } from '../types/auth.types';
 import { authService } from '../services/authService';
 
 interface AuthActions {
@@ -28,9 +28,7 @@ export const useAuthStore = create<AuthStore>()(
           const response = await authService.login(credentials);
           console.log('AuthStore: Login response received', response);
           
-          localStorage.setItem('token', response.token);
           set({ 
-            user: response.user, 
             isAuthenticated: true, 
             isLoading: false 
           });
@@ -40,8 +38,8 @@ export const useAuthStore = create<AuthStore>()(
           let errorMessage = 'Login failed';
           
           if (error && typeof error === 'object' && 'response' in error) {
-            const axiosError = error as { response?: { data?: { message?: string } }; message?: string };;
-            errorMessage = axiosError.response?.data?.message || axiosError.message || 'Login failed';
+            const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };;
+            errorMessage = axiosError.response?.data?.detail || axiosError.message || 'Login failed';
           } else if (error instanceof Error) {
             errorMessage = error.message;
           }
@@ -60,16 +58,26 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         try {
           console.log('AuthStore: Starting registration process');
-          await authService.register(credentials);
-          console.log('AuthStore: Registration successful');
-          set({ isLoading: false });
+          const userResponse = await authService.register(credentials);
+          console.log('AuthStore: Registration successful', userResponse);
+          
+          const user: User = {
+            id: userResponse.id,
+            email: userResponse.email,
+            created_at: userResponse.created_at
+          };
+          
+          set({ 
+            user,
+            isLoading: false 
+          });
         } catch (error) {
           console.error('AuthStore: Registration failed', error);
           let errorMessage = 'Registration failed';
           
           if (error && typeof error === 'object' && 'response' in error) {
-            const axiosError = error as { response?: { data?: { message?: string } }; message?: string };;
-            errorMessage = axiosError.response?.data?.message || axiosError.message || 'Registration failed';
+            const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };;
+            errorMessage = axiosError.response?.data?.detail || axiosError.message || 'Registration failed';
           } else if (error instanceof Error) {
             errorMessage = error.message;
           }
@@ -83,7 +91,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
-        localStorage.removeItem('token');
+        authService.logout();
         set({ 
           user: null, 
           isAuthenticated: false, 
@@ -92,10 +100,8 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       checkAuth: () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-          set({ isAuthenticated: true });
-        }
+        const isAuth = authService.isAuthenticated();
+        set({ isAuthenticated: isAuth });
       },
 
       clearError: () => set({ error: null }),

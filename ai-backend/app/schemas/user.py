@@ -4,44 +4,44 @@ from typing import Optional
 
 
 class UserBase(BaseModel):
-    email: EmailStr = Field(..., description="User email adress")
+    email: EmailStr = Field(..., description="User email address")
 
 
 class UserCreate(UserBase):
     password: str = Field(
-        min_length=6, 
-        max_length=128,
-        description="User password(6 characters)"
+        min_length=6, max_length=128, description="User password (6 characters)"
     )
 
 
 class UserLogin(BaseModel):
-    email: EmailStr = Field(..., description="Email адреса")
-    password: str = Field(..., description="Пароль користувача")
+    email: EmailStr = Field(..., description="Email address")
+    password: str = Field(..., description="User password")
 
 
 class UserResponse(UserBase):
-    """Схема для відповіді API з даними користувача"""
-    id: int = Field(..., description="Унікальний ID користувача")
-    created_at: datetime = Field(..., description="Дата створення акаунту")
-    
+    id: int = Field(..., description="Unique user id")
+    created_at: datetime = Field(..., description="Created date")
+
     class Config:
-        from_attributes = True  # Дозволяє конвертувати SQLAlchemy об'єкти
+        from_attributes = True
 
 
-class UserInDB(UserBase):
-    """Схема для внутрішнього використання (з хешем пароля)"""
+class UserInDb(UserBase):
     id: int
     password_hash: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
 
 class UserUpdate(BaseModel):
-    """Схема для оновлення даних користувача"""
-    email: Optional[EmailStr] = Field(None, description="Новий email (опціонально)")
-    
+    email: Optional[EmailStr] = Field(None, description="New email")
+
     class Config:
         from_attributes = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
