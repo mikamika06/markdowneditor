@@ -6,11 +6,9 @@ import json
 from datetime import datetime
 from app.core.database import create_tables
 
-from app.routes.notes import router as notes_router
+from app.routes.simple_ai_routes import router as ai_router
 from app.routes.auth import router as auth_router
-
-from app.routes.ai import router as ai_router
-from app.routes.documents import router as documents_router
+from app.routes.notes import router as notes_router
 
 from app.models import user, note
 
@@ -51,9 +49,7 @@ app.add_middleware(
 
 app.include_router(notes_router)
 app.include_router(auth_router)
-
 app.include_router(ai_router)
-app.include_router(documents_router)
 
 
 @app.get("/")
