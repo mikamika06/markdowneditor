@@ -7,15 +7,14 @@ interface NoteItemProps {
 }
 
 export function NoteItem({ note, isActive, onClick }: NoteItemProps) {
-  const formattedDate = new Date(note.updatedAt).toLocaleDateString();
-  
+  const formattedDate = new Date(note.updated_at).toLocaleDateString();
+
   return (
     <div
-      className={`p-3 cursor-pointer transition-colors duration-200 ${
-        isActive 
-          ? 'bg-gray-100 border-l-4 border-gray-700 shadow-sm' 
+      className={`p-3 cursor-pointer transition-colors duration-200 ${isActive
+          ? 'bg-gray-100 border-l-4 border-gray-700 shadow-sm'
           : 'hover:bg-gray-50 border-l-4 border-transparent'
-      } pr-8`} 
+        } pr-8`}
       onClick={onClick}
     >
       <div className="flex justify-between items-start">

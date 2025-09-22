@@ -1,6 +1,7 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
+  created_at: string;
 }
 
 export interface LoginRequest {
@@ -14,8 +15,14 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: User;
+  access_token: string;
+  token_type: string;
+}
+
+export interface UserResponse {
+  id: number;
+  email: string;
+  created_at: string;
 }
 
 export interface AuthState {

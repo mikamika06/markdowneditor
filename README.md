@@ -147,3 +147,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
    ```
 
    ```
+cd /Users/macbook/Documents/workaem/markdowneditor/ai-backend && PYTHONPATH=/Users/macbook/Documents/workaem/markdowneditor/ai-backend /Users/macbook/Documents/workaem/markdowneditor/ai-backend/venv/bin/uvicorn main:app --reload --port 8000 --- for ai backend

@@ -11,13 +11,14 @@ export function Header({ onAuthClick }: HeaderProps) {
     <header className="bg-gray-50 border-b border-gray-200 px-4 py-3 shadow-sm">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
+          <svg className="w-6 h-6 mr-3 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               d="M7 8h10M7 12h10M7 16h10M3 3h18a2 2 0 012 2v14a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2z"
-            ></path>
-          
+            />
+          </svg>
           <h1 className="text-xl font-semibold text-gray-800">
             Markdown Editor
           </h1>
